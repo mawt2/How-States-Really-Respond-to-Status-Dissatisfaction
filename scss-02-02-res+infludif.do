@@ -190,6 +190,7 @@ addplot 2: (scatteri -.002 -.002 .002 -.002 .002 .00625 -.002 .00625 -.002 -.002
 lpattern(solid) lcolor(black)) /* Inset plot along hidden 2nd X-axis
 */ (pci -.021 -.133 -.0055 -.133, lpattern(shortdash) lcolor(black) lwidth(thin)) (pci -.013 -.1385 -.013 -.09, lpattern(shortdash) lcolor(black) lwidth(thin) norescaling
 legend(off)) /* Axis guide lines
+\*
 
 /// Width of axis guide lines
 gr_edit .plotregion1.graph2.plotregion1.plot19.style.editstyle line(width(vthin)) editcopy 
