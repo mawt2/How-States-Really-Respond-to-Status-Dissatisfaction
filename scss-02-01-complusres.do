@@ -66,7 +66,7 @@ foreach pc in `sample' {
     *| Number of bins (proportional to subpopulation size)
     local nbins`j' = floor(sqrt(`subobs'))
     noi di `nbins`j''
-	local nbins`j': di %3.0f `nbins`j''
+    local nbins`j': di %3.0f `nbins`j''
     *| Bins of (roughly) equal size 
     egen `binno`j'' = cut(`obs`j'') if pr_a < . & `pc' == 1 , group(`nbins`j'') icodes 
     *| Average CINC value by bin
