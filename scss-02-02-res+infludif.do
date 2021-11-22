@@ -200,7 +200,8 @@ addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002
 
 
 
-
+/// Move note to far left
+gr_edit .note.DragBy 0 -.94118235297
 
 
 
