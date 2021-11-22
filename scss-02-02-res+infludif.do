@@ -197,21 +197,11 @@ gr_edit .plotregion1.graph2.plotregion1.plot19.style.editstyle line(width(vthin)
 gr_edit .plotregion1.graph2.plotregion1.plot22.style.editstyle line(width(vthin)) editcopy 
 
 /// Plot inset markers on 2nd X-axis
-addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs1%2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) 
-
-
-
-/// Move note to far left
-gr_edit .note.DragBy 0 -.94118235297
-
-
-
-
-
+addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs1%2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) /*
 */ xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 2 & DFZdif_mcap <=.002, msymbol(oh) msize(small) /*2
-mcolor(gs5%25*1.2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) /* 3
-(scatter DFZdif_def DFZdif_mcap if pclass_1 == 3 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs9%25*1.1) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) /* 4
-xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 4 & DFZdif_mcap <=.002, msymbol(oh) msize(small) /* 5
-mcolor(gs13%50) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) xscale(axis(2)off) mlwidth(thin) norescaling legend(off)) 6
+*/ mcolor(gs5%25*1.2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) /* 3
+*/ (scatter DFZdif_def DFZdif_mcap if pclass_1 == 3 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs9%25*1.1) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) /* 4
+*/ xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 4 & DFZdif_mcap <=.002, msymbol(oh) msize(small) /* 5
+*/ mcolor(gs13%50) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) xscale(axis(2)off) mlwidth(thin) norescaling legend(off)) 6
 
 
