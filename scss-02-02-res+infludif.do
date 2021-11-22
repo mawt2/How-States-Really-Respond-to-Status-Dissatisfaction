@@ -179,16 +179,28 @@ forvalues i = 9/12 {
 /// Add residual differences text to plot
 addplot 1 :(, text(.5 1 "{bf:Residual differences by change in Pr(MID initiation)}", size(14pt) just(left))) (, text(.3975 .975 "GUY vs. SUR (1977): {&Delta} Pr = {&minus}`prdif1' {&rArr} {&Delta} {it:d} = `resdif1'" "YUG vs. HUN (1991): {&Delta} Pr = `prdif2' {&rArr} {&Delta} {it:d} = {&minus}`resdif2'" "GFR vs. RUS (1980): {&Delta} Pr = `prdif3' {&rArr} {&Delta} {it:d} = {&minus}`resdif3'" "USA vs. CHN (1957): {&Delta} Pr = {&minus}`prdif4' {&rArr} {&Delta} {it:d} = `resdif4'", size(14pt) just(left)) norescaling legend(off)) 
 
-/// Add inset plot axes and connecting lines
-addplot 2: (scatteri -.002 -.002 .002 -.002 .002 .00625 -.002 .00625 -.002 -.002, recast(line) lpattern(solid) lcolor(black)) (pcarrowi -.002 .00625 -.021 -.09, recast(line) lpattern(solid) lwidth(vthin) lcolor(black)) (pci .002 -.002 -.0055 -.1385, lpattern(solid) lwidth(vthin) lcolor(black)) (scatteri -.021 -.09 -.021 -.1385 -.0055 -.1385 -.0055 -.09 -.021 -.09 , recast(line) lpattern(solid) lcolor(black)) (pci -.021 -.133 -.0055 -.133, lpattern(shortdash) lcolor(black) lwidth(thin)) (pci -.013 -.1385 -.013 -.09, lpattern(shortdash) lcolor(black) lwidth(thin) norescaling legend(off))
-gr_edit .plotregion1.graph2.plotregion1.plot19.style.editstyle line(width(vthin)) editcopy
-gr_edit .plotregion1.graph2.plotregion1.plot22.style.editstyle line(width(vthin)) editcopy
-
 /// SLight adjustment to marker position
 replace DFZdif_mcap = DFZdif_mcap - .00012 if pclass_1 == 3
 replace DFZdif_mcap = DFZdif_mcap - .00006 if pclass_1 == 2
 
-/// Plot inset markers (non-initiation dyads) on 2nd Y/X-axes
-addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs1%2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 2 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs5%25*1.2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 3 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs9%25*1.1) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 4 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs13%50) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) xscale(axis(2)off) mlwidth(thin) norescaling legend(off)) 
+/// Add inset plot axes and connecting lines
+addplot 2: (scatteri -.002 -.002 .002 -.002 .002 .00625 -.002 .00625 -.002 -.002, recast(line) lpattern(solid) lcolor(black)) /* Superimposed inset box
+*/ (pcarrowi -.002 .00625 -.021 -.09, recast(line) lpattern(solid) lwidth(vthin) lcolor(black)) /* Connecting lines 
+*/ (pci .002 -.002 -.0055 -.1385, lpattern(solid) lwidth(vthin) lcolor(black)) (scatteri -.021 -.09 -.021 -.1385 -.0055 -.1385 -.0055 -.09 -.021 -.09 , recast(line)
+lpattern(solid) lcolor(black)) /* Inset plot along hidden 2nd X-axis
+*/ (pci -.021 -.133 -.0055 -.133, lpattern(shortdash) lcolor(black) lwidth(thin)) (pci -.013 -.1385 -.013 -.09, lpattern(shortdash) lcolor(black) lwidth(thin) norescaling
+legend(off)) /* Axis guide lines
+
+/// Width of axis guide lines
+gr_edit .plotregion1.graph2.plotregion1.plot19.style.editstyle line(width(vthin)) editcopy 
+gr_edit .plotregion1.graph2.plotregion1.plot22.style.editstyle line(width(vthin)) editcopy 
+
+/// Plot inset markers on 2nd X-axis
+addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs1%2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) /*
+*/ xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 2 & DFZdif_mcap <=.002, msymbol(oh) msize(small) /*
+*/ mcolor(gs5%25*1.2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) /*
+*/ (scatter DFZdif_def DFZdif_mcap if pclass_1 == 3 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs9%25*1.1) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) /*
+*/ xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) mlwidth(thin) jitter(.1)) (scatter DFZdif_def DFZdif_mcap if pclass_1 == 4 & DFZdif_mcap <=.002, msymbol(oh) msize(small) /*
+*/ mcolor(gs13%50) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) xlabel(-.0007 .00725, axis(2)) yscale(axis(2) off) xscale(axis(2)off) mlwidth(thin) norescaling legend(off)) 
 
 
