@@ -196,7 +196,7 @@ gr_edit .plotregion1.graph2.plotregion1.plot19.style.editstyle line(width(vthin)
 gr_edit .plotregion1.graph2.plotregion1.plot22.style.editstyle line(width(vthin)) editcopy 
 
 /// Plot inset markers on 2nd X-axis
-addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs1%2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) /*
+addplot 2: (scatter DFZdif_def DFZdif_mcap if pclass_1 == 1 & DFZdif_mcap <=.002, msymbol(oh) msize(small) mcolor(gs1%2) xaxis(2) yaxis(2) ylabel(-.0001 .000975, axis(2)) 
 
 
 
