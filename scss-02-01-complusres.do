@@ -51,38 +51,30 @@ predict pr_a, xb
 /// Component-plus-residual
 qui gen pres_a = pr_a + dres_a
 
-/// Loop over levels of expected status (that is, subpopulations)
+/// Loop over levels of expected status (subpopulations)
 local j 0
 local sample small_1 middle_1 major_1 world_1
 foreach pc in `sample' {
 	local ++ j
-	
 	*| Temp variable names
 	tempname obs`j' binno`j' 
 	sort mcap_1_lg1
-	
 	*| Observation number by subpopulation
     generate `obs`j'' = _n if pr_a < . & `pc' == 1
     su `obs`j''
     local subobs = r(N)
-
     *| Number of bins (proportional to subpopulation size)
     local nbins`j' = floor(sqrt(`subobs'))
     noi di `nbins`j''
 	local nbins`j': di %3.0f `nbins`j''
-
     *| Bins of (roughly) equal size 
     egen `binno`j'' = cut(`obs`j'') if pr_a < . & `pc' == 1 , group(`nbins`j'') icodes 
-
     *| Average CINC value by bin
     egen av_a`j' = mean(mcap_1_lg1), by(`binno`j'')
-
     *| Average prediction by bin 
     egen avcpr_a`j' = mean(pres_a) if `pc' == 1, by(`binno`j'')
-
     *| Tag binned observations
     egen tag_a`j' = tag(`binno`j'')
-
 }
 
 
