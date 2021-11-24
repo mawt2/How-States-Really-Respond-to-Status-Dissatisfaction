@@ -24,8 +24,8 @@
 % Main effect coefficients + SE values 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hspace{5mm}Status deficit &0.252\sym{**}  &0.248\sym{**}  &0.151\sym{**} &-0.0386 \\ &(0.0479)  &(0.0474)  &(0.0525)  &(0.0691) \\ \addlinespace 
-\hspace{5mm}CINC  & 0.312\sym{**}  & 0.300\sym{**} & \multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & \multicolumn{1}{r}{-}{\RaggedRight}\hspace{6.5mm} \\
-&(0.0195) &(0.0205) & & \\ \addlinespace 
+\hspace{5mm}CINC  & 0.312\sym{**}  & 0.300\sym{**} & \multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & \multicolumn{1}{r}{-}{\RaggedRight}\hspace{6.5mm} \\ &(0.0195) &(0.0205) 
+& & \\ \addlinespace 
 \hspace{5mm}CINC(ln) smoothed & & & & \\ \addlinespace \hspace{15mm}\emph{k0} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} 
 & 0.943\sym{**} &1.080\sym{**} \\ & & &(0.109) &(0.134) \\ \addlinespace
 \hspace{15mm}\emph{k1} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &-0.0215 &0.158 \\ & & &(0.0911) &(0.123) \\ \addlinespace
