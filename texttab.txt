@@ -1,12 +1,4 @@
-\documentclass{article}
-\usepackage{dcolumn booktabs multicol ragged2e fourier geometry chngcntr}
-\usepackage[font=normalsize, font=it,skip=.25cm,justification=justified, indentation=-2cm, tablename=Figure,bf,it]{caption} % Caption text options
-\usepackage[section]{placeins} % Force image position
-\DeclareFloatingEnvironment[name={Table}]{tab}
-\captionsetup[tab]{labelfont=bf} % Table caption options
-\counterwithin{tab}{section}  % Increment for table counter
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Coefficient Table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tab}[!htp] % Table environment
 \caption{\raggedright{Table of coefficients for models with CINC versus cubic spline of CINC(ln).}} % Cap
 \scriptsize % Font size
