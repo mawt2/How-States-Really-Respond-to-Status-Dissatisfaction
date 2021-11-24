@@ -66,30 +66,23 @@ frame change rpc
 *<~> Loop over expected status
 local j 0 
 foreach pc of varlist small_1 middle_1 major_1 world_1 {
-	
 	/// New frame
     qui frame copy rpc rpchange_`pc'
 	qui frame change rpchange_`pc'
-	
 	// Increments by expected status/model
 	local ++ j
 	local j2 0
-	
 	*<~> Loop over models
 	forvalues i = 1/4 {
 		local ++ j2
 		 qui est restore pr`i'
-	    
 		/// Matrix to store results
 	    qui mat rpc`i'_`pc' = J(21,3,.)
-	
         // Estimate margins status deficit with CINC at subpopulation mean (and post to e)
 		if `j2' == 1 | `j2' == 2 {
-	
             qui margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2)) atmeans post
 			qui est store mar`i'_`pc'
 		}
-		
 	    // Macros for the subpopulation mean of CINC(ln) smoothed (that is, the value of each knot when the base knot = mean)
 		else {
 			qui tempvar avmcaplnk_0
@@ -99,47 +92,33 @@ foreach pc of varlist small_1 middle_1 major_1 world_1 {
 			qui sort `absmcaplnk_0'
 			forvalues k = 0/7 {
 				qui local k`k'av = mcaplnk_`k'[1]
-				
 			}
-			
 		    ///	Estimate margins for status deficit with CINC(ln) smoothed at subpopulation mean (and post to e)
 			qui margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2) mcaplnk_0 = `k0av' mcaplnk_1 = `k1av' mcaplnk_2 = `k2av' mcaplnk_3 = `k3av' mcaplnk_4 = `k4av' mcaplnk_5 = `k5av' mcaplnk_6 = `k6av' mcaplnk_7 = `k7av') post
 			qui est store mar`i'_`pc'
 		}
-        
-		
 		*<~> Loop over margins estimates in increments of .2 sd of status deficit
         forvalues k = 1/21 {
-			
 			*<~> Loop over estimates (except mean)
 		    if `k' != 11 {
-				
 				*<~> Separate loop for first estimate (because coef. name is different to rest)
-		        if `k' == 1 {
-					
+		        if `k' == 1 {	
 		            /// Estimate relative percent change from the mean
 			        nlcom (rpc`k':(_b[`k'bn._at]/_b[11._at]-1)*100), post
-				
 			        qui mat rpc`i'_`pc'[`k', 1] = e(b)
 			        qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']
 			        qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']
-			
 			        qui est restore mar`i'_`pc'
 			    }
-				
 				*>~< Main estimates loop
 			    else {
-					
 			         nlcom (rpc`k':(_b[`k'._at]/_b[11._at]-1)*100), post
-				
 			         qui mat rpc`i'_`pc'[`k', 1] = e(b)
 			         qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']
-			         qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']
-					
+			         qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']	
 			         qui est restore mar`i'_`pc'
 			    }
 		    }
-		
 		    /// Store mean estimate as 0 (since percent change is calculated from the mean)
 		    else if `k' == 11 {
 			
