@@ -1,0 +1,139 @@
+%  5 Nov 2021 16:32:51
+\documentclass{article}
+\usepackage{dcolumn}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{blindtext}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{ragged2e}
+\usepackage{array}
+\pagenumbering{gobble}
+
+
+\setlength{\voffset}{-0.85in}
+\setlength{\headsep}{6pt}
+\setlength{\tabcolsep}{5pt}
+
+\begin{document}
+
+\noindent\makebox[\textwidth]{\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{@{}l*{4}{D{.}{.}{-1}}@{}}
+
+
+% Top rule line + model header text
+%--------------------------------------
+\toprule \toprule &\multicolumn{2}{c}{\textbf{With CINC}} & \multicolumn{2}{c}{\textbf{With CINC(ln) smoothed}}\\
+
+
+% Rule lines under model headers
+%--------------------------------
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}  &\multicolumn{1}{c}{(1)} &\multicolumn{1}{c}{(2)}  &\multicolumn{1}{c}{(3)} &\multicolumn{1}{c}{(4)}  \\
+
+% Rule line separating headers and cells
+%----------------------------------------
+\midrule
+
+% Status deficit
+%-----------------
+\\[-2.75mm] \textbf{\emph{Main effects}}
+\\
+\addlinespace
+\hspace{5mm}Status deficit   &0.252\sym{**}  &0.248\sym{**}  &0.151\sym{**} & -0.0386   \\
+&(0.0479)  &(0.0474)  &(0.0525)  &(0.0691) \\
+
+% CINC 
+%--------------
+\addlinespace
+\hspace{5mm}CINC  &0.312\sym{**}  &0.300\sym{**}  &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{6.5mm} \\
+&(0.0195)  &(0.0205)  &  &  \\
+
+% CINC(ln) smoothed
+%----------------------
+\addlinespace
+\hspace{5mm}CINC(ln) smoothed  &  &  &   &  \\
+% Knot0
+\addlinespace
+ \hspace{15mm}\emph{k0} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}  &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}  &0.943\sym{**} &1.080\sym{**} \\
+&  &  &(0.109) &(0.134) \\
+% Knot1
+\addlinespace
+\hspace{15mm}\emph{k1} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}    &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}    &-0.0215 &0.158        \\
+&  &  &(0.0911)  &(0.123)  \\
+% Knot2
+\addlinespace
+\hspace{15mm}\emph{k2}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     & 0.154   & 0.0430        \\
+&    &   & (0.0855)   & (0.0886)        \\
+%Knot3
+\addlinespace
+\hspace{15mm}\emph{k3}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     & -0.0459   & -0.0244       \\
+&   &   & (0.102)   & (0.0966)   \\
+%Knot4
+\addlinespace
+\hspace{15mm}\emph{k4}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}       &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}      & -0.0655   & -0.0849   \\
+&   &   & (0.0673)   & (0.0684)        \\
+%Knot5
+\addlinespace
+\hspace{15mm}\emph{k5}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}        &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}      & -0.118\sym{*}   & -0.117\sym{*} \\
+&   &   & (0.0539)  & (0.0532)        \\
+%Knot6
+\addlinespace
+\hspace{15mm}\emph{k6}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     & -0.151\sym{**}   & -0.156\sym{**}\\
+&   &   & (0.0442)  & (0.0443)        \\
+%Knot7
+\addlinespace
+\hspace{15mm}\emph{k7}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}     & 0.0354   & 0.0457        \\
+&   &   & (0.0368)  & (0.0414)        \\
+% Constant
+%----------------
+\addlinespace
+\hspace{5mm}Constant   & -6.776\sym{**}   & -6.783\sym{**}   & -7.092\sym{**}   &     -7.156\sym{**}\\
+& (0.0627)   & (0.0630)   & (0.0814)  & (0.0884)        \\
+% Rule line separating headers and cells
+%----------------------------------------
+\addlinespace
+\midrule
+\\[-2.75mm] \textbf{\emph{Interactions}}
+\\ 
+\addlinespace
+\hspace{5mm}Status deficit X   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &      0.0760        &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{6.5mm}                      \\
+\hspace{5mm}CINC                    &                    &    (0.0481)        &                    &                    \\
+\addlinespace
+\hspace{5mm}Status deficit X & & & & \\
+\hspace{5mm}CINC(ln) smoothed&                    &                    &                    &                    \\
+\addlinespace
+            \hspace{15mm}\emph{k0}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &       0.400\sym{**}\\
+                    &                    &                    &                    &     (0.119)        \\
+\addlinespace
+          \hspace{15mm}\emph{k1}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &   0.379\sym{**}\\
+                    &                    &                    &                    &     (0.108)        \\
+\addlinespace
+           \hspace{15mm}\emph{k2}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &      -0.247\sym{**}\\
+                    &                    &                    &                    &    (0.0653)        \\
+\addlinespace
+           \hspace{15mm}\emph{k3}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &       0.124        \\
+                    &                    &                    &                    &    (0.0724)        \\
+\addlinespace
+           \hspace{15mm}\emph{k4}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &      0.0505        \\
+                    &                    &                    &                    &    (0.0508)        \\
+\addlinespace
+           \hspace{15mm}\emph{k5}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                     &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &     -0.0351        \\
+                    &                    &                    &                    &    (0.0389)        \\
+\addlinespace
+           \hspace{15mm}\emph{k6}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &     -0.0279        \\
+                    &                    &                    &                    &    (0.0433)        \\
+\addlinespace
+           \hspace{15mm}\emph{k7}   &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm}                      &    0.000638        \\
+                    &                    &                    &                    &    (0.0372)        \\
+\\[-3mm]
+\midrule
+Observed  &\multicolumn{1}{r}{965,624}{\RaggedRight}  &\multicolumn{1}{r}{965,624}{\RaggedRight} &\multicolumn{1}{r}{965,624}{\RaggedRight}  &\multicolumn{1}{r}{965,624}{\RaggedRight}\hspace{1.55mm}        \\
+Psuedo R$^2$      &0.0352        &0.0355        &      0.0578        &0.0590        \\
+\bottomrule
+\bottomrule
+\multicolumn{5}{l}{\footnotesize\hspace{-2.6mm} Standard errors in parentheses}\\
+\multicolumn{5}{l}{\footnotesize\hspace{-2.6mm} \sym{*} \(p<0.05\), \sym{**} \(p<0.01\)}\\
+\end{tabular}
+}
+
+
