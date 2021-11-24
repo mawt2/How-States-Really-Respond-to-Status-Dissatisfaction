@@ -1,3 +1,4 @@
+
 % Set LaTeX environment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{dcolumn booktabs multicol ragged2e fourier chngcntr} % General + table packages
