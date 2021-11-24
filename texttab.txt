@@ -30,8 +30,7 @@
 \hspace{15mm}\emph{k1} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &-0.0215 &0.158 \\ & & &(0.0911) &(0.123) \\ \addlinespace
 \hspace{15mm}\emph{k2} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & 0.154 & 0.0430 \\ & & &(0.0855) &(0.0886) \\ addlinespace
 \hspace{15mm}\emph{k3} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & -0.0459 & -0.0244 \\& & &(0.102) &(0.0966) \\ \addlinespace
-\hspace{15mm}\emph{k4} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & -0.0655 & -0.0849 \\
-& & &(0.0673) &(0.0684) \\ \addlinespace
+\hspace{15mm}\emph{k4} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & -0.0655 & -0.0849 \\ & & &(0.0673) &(0.0684) \\ \addlinespace
 \hspace{15mm}\emph{k5} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & -0.118\sym{*} & -0.117\sym{*} \\ & & &(0.0539) &(0.0532) \\ \addlinespace
 \hspace{15mm}\emph{k6} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & -0.151\sym{**} & -0.156\sym{**}\\ & & &(0.0442) &(0.0443) \\ \addlinespace
 \hspace{15mm}\emph{k7} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} &\multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & 0.0354   & 0.0457 \\ & & &(0.0368) &(0.0414)\\
