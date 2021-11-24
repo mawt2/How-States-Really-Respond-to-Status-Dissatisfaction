@@ -18,8 +18,9 @@
 \midrule % Middle rule line
 \\[-2.75mm] \textbf{\emph{Main effects}} % Main effect cell heading
 \\ \addlinespace % Vertical spacing
-**% Main effect coefficients + SE values**
+% Main effect coefficients + SE values
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+`sample`**`sample`**`sample`
 \hspace{5mm}Status deficit &0.252\sym{**}  &0.248\sym{**}  &0.151\sym{**} &-0.0386 \\ &(0.0479)  &(0.0474)  &(0.0525)  &(0.0691) \\ \addlinespace 
 \hspace{5mm}CINC  & 0.312\sym{**}  & 0.300\sym{**} & \multicolumn{1}{r}{-}{\RaggedRight}\hspace{5mm} & \multicolumn{1}{r}{-}{\RaggedRight}\hspace{6.5mm} \\ &(0.0195) &(0.0205) 
 & & \\ \addlinespace 
