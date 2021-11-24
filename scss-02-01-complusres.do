@@ -51,7 +51,7 @@ predict pr_a, xb
 /// Component-plus-residual
 qui gen pres_a = pr_a + dres_a
 
-/// Loop over levels of expected status (subpopulations)
+/// Loop over levels of expected status (sub-populations)
 local j 0
 local sample small_1 middle_1 major_1 world_1
 foreach pc in `sample' {
