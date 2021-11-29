@@ -68,79 +68,81 @@ local j 0
 qui foreach pc of varlist small_1 middle_1 major_1 world_1 {
      frame copy rpc rpchange_`pc'   // New frame
      frame change rpchange_`pc'
-	local ++ j *| // Set increment by sub-pop
-	local j2 0
-	*| Loop over models
-	forvalues i = 1/4 {
-		local ++ j2   // Set increment by model
-		est restore pr`i'   // Restore model estimates
-	        mat rpc`i'_`pc' = J(21,3,.)   // Matrix to store results
-                *| Predictions for non-spline models
-		if `j2' == 1 | `j2' == 2 {
-                    margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2)) atmeans post  
-	            est store mar`i'_`pc'
-		}
-	        *| Predictions for spline models
-		else {
-	            tempvar avmcaplnk_0
-		    tempvar absmcaplnk_0
-		    egen `avmcaplnk_0' = mean(mcaplnk_0) if `pc' == 1   // Sub-population mean of CINC/CINC(ln)
-		    gen `absmcaplnk_0' = abs(`avmcaplnk_0' - mcaplnk_0)   // Temp var to hold sub-pop mean
-		    sort `absmcaplnk_0'
-		    forvalues k = 0/7 {
-		        local k`k'av = mcaplnk_`k'[1]   // Macro for knot value at sub-pop mean
-		    }
-		    margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2) mcaplnk_0 = `k0av' mcaplnk_1 = `k1av'/*
-		    */ mcaplnk_2 = `k2av' mcaplnk_3 = `k3av' mcaplnk_4 = `k4av' mcaplnk_5 = `k5av' mcaplnk_6 = `k6av' mcaplnk_7 = `k7av') post
-		    qui est store mar`i'_`pc'
-		}
-	        *| Loop over margins estimates in .2 sd increnents of status deficit
-                forvalues k = 1/21 {
-		    if `k' != 11 {
-		        if `k' == 1 {   // Naming convention different for 1st est
-			        nlcom (rpc`k':(_b[`k'bn._at]/_b[11._at]-1)*100), post   // Calculate % change
-			        qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
-			        qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
-			        qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI
-			        qui est restore mar`i'_`pc'
-			    }
-			    else {   // Remaining est. (except where status deficit = 0
-			         nlcom (rpc`k':(_b[`k'._at]/_b[11._at]-1)*100), post   // Calculate % change
-			         qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
-			         qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
-			         qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI	
-			         qui est restore mar`i'_`pc'
-			    }
-		    }
-		    else if `k' == 11 {   // Mean est = 0 (since % change calculated from mean)
-		        qui mat rpc`i'_`pc'[`k', 1] = 0
-			qui mat rpc`i'_`pc'[`k', 2] = 0
-		        qui mat rpc`i'_`pc'[`k', 3] = 0
-	        }
-        }	    
+     local ++ j *| // Set increment by sub-pop
+     local j2 0
+     *| Loop over models
+     forvalues i = 1/4 {
+         local ++ j2   // Set increment by model
+	 est restore pr`i'   // Restore model estimates
+	 mat rpc`i'_`pc' = J(21,3,.)   // Matrix to store results
+         *| Predictions for non-spline models
+	 if `j2' == 1 | `j2' == 2 {
+             margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2)) atmeans post  
+	     est store mar`i'_`pc'
+	 }
+	 *| Predictions for spline models
+	 else {
+	     tempvar avmcaplnk_0
+             tempvar absmcaplnk_0
+	     egen `avmcaplnk_0' = mean(mcaplnk_0) if `pc' == 1   // Sub-population mean of CINC/CINC(ln)
+	     gen `absmcaplnk_0' = abs(`avmcaplnk_0' - mcaplnk_0)   // Temp var to hold sub-pop mean
+	     sort `absmcaplnk_0'
+	     forvalues k = 0/7 {
+		 local k`k'av = mcaplnk_`k'[1]   // Macro for knot value at sub-pop mean
+	     }
+	     margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2) mcaplnk_0 = `k0av' mcaplnk_1 = `k1av'/*
+	     */ mcaplnk_2 = `k2av' mcaplnk_3 = `k3av' mcaplnk_4 = `k4av' mcaplnk_5 = `k5av' mcaplnk_6 = `k6av' mcaplnk_7 = `k7av') post
+             qui est store mar`i'_`pc'
+	 }
+	 *| Loop over margins estimates in .2 sd increnents of status deficit
+         forvalues k = 1/21 {
+             if `k' != 11 {
+                 if `k' == 1 {   // Naming convention different for 1st est
+	             nlcom (rpc`k':(_b[`k'bn._at]/_b[11._at]-1)*100), post   // Calculate % change
+		     qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
+	             qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
+	             qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI
+		     qui est restore mar`i'_`pc'
+	         }
+	         else {   // Remaining est. (except where status deficit = 0
+	             nlcom (rpc`k':(_b[`k'._at]/_b[11._at]-1)*100), post   // Calculate % change
+		     qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
+		     qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
+		     qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI	
+		     qui est restore mar`i'_`pc'
+		 }
+	     }
+             else if `k' == 11 {   // Mean est = 0 (since % change calculated from mean)
+		 qui mat rpc`i'_`pc'[`k', 1] = 0
+		 qui mat rpc`i'_`pc'[`k', 2] = 0
+		 qui mat rpc`i'_`pc'[`k', 3] = 0
+	     }
+         }
+	 
+         
 	    
-        *** Save results matrix as dataset	
-        qui preserve
-        qui xsvmat rpc`i'_`pc', saving(rpcbase`i'_`pc', replace)
-	qui use rpcbase`i'_`pc', clear
-	qui egen _at = fill(-2 (.2) 2)
-	qui gen pc = `j'
-	qui gen e_type = `i'
-	qui rename rpc`i'_`pc'1 rpc_e
-	qui rename rpc`i'_`pc'2 rpc_lb
-	qui rename rpc`i'_`pc'3 rpc_ub
-	qui save rpcbase`i'_`pc', replace
-	qui restore
-    } 
+         *** Save results matrix as dataset	
+         qui preserve
+         qui xsvmat rpc`i'_`pc', saving(rpcbase`i'_`pc', replace)
+	 qui use rpcbase`i'_`pc', clear
+	 qui egen _at = fill(-2 (.2) 2)
+	 qui gen pc = `j'
+	 qui gen e_type = `i'
+	 qui rename rpc`i'_`pc'1 rpc_e
+	 qui rename rpc`i'_`pc'2 rpc_lb
+	 qui rename rpc`i'_`pc'3 rpc_ub
+	 qui save rpcbase`i'_`pc', replace
+	 qui restore
+     } 
 	
- 	/// Append results from each model
-	qui use rpcbase1_`pc', clear
-	qui append using rpcbase2_`pc'
-	qui append using rpcbase3_`pc'
-	qui append using rpcbase4_`pc'
-	qui save rpcbase_`pc', replace
+     /// Append results from each model
+     qui use rpcbase1_`pc', clear
+     qui append using rpcbase2_`pc'
+     qui append using rpcbase3_`pc'
+     qui append using rpcbase4_`pc'
+     qui save rpcbase_`pc', replace
 	
-	qui frame change rpc
+    qui frame change rpc
 }
 
 
