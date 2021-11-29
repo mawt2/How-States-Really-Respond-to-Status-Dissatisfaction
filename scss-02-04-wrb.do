@@ -535,7 +535,7 @@ twoway (line _e _at if _m == 1 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern
 *** Connected plot
 twoway (line _e _at if _m == 3 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 3 & _etype ==  1 & _pc == 2, lwidth(vthin) /*
 */ lpattern(solid) lcolor(black))(line _e _at if _m == 3 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 3 & _etype ==  1 /* 
-*/ & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /* (line _e _at if _m == 4 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if /*
+*/ & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if /*
 */ _m == 4 & _etype ==  1 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) /*
 */ lcolor(black)) (line _e _at if _m == 4 & _etype ==  1 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 1, /*
 */ lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype/*
