@@ -531,35 +531,45 @@ twoway (line _e _at if _m == 1 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern
 
 
 
-*************************************************************
 
-twoway (line _e _at if _m == 3 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 3 & _etype ==  1 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 3 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 3 & _etype ==  1 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /*
+*** Connected plot
+twoway (line _e _at if _m == 3 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 3 & _etype ==  1 & _pc == 2, lwidth(vthin) /*
+*/ lpattern(solid) lcolor(black))(line _e _at if _m == 3 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 3 & _etype ==  1 /* 
+*/ & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /* (line _e _at if _m == 4 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if /*
+*/ _m == 4 & _etype ==  1 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) /*
+*/ lcolor(black)) (line _e _at if _m == 4 & _etype ==  1 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 1, /*
+*/ lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype/*
+==  2 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /*
 
-*/ (line _e _at if _m == 4 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  1 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  1 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /*
+*/ (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 1 & tag != 1, symbol(O) mfcolor(personal) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & /*
+*/ _etype ==  1 & _pc == 2 & tag != 1, symbol(O) mfcolor(2) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 3 & tag != 1, /* 
+*/ symbol(O) mfcolor(3) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 4 & tag != 1, symbol(O) mfcolor(4) mlcolor(black) /*
+*/ msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 1 & tag != 1,symbol(S) mfcolor(personal) mlcolor(black) msize(3.1) mlwidth(vthin)) /*
+*/ (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 2 & tag != 1,symbol(S) mfcolor(2) mlcolor(black) msize(3.1) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  1 /*
+*/ & _pc == 3 & tag != 1,symbol(S) mfcolor(3) mlcolor(black) msize(3.1) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 4 & tag != 1,symbol(S) mfcolor(4) /*
+*/ mlcolor(black) msize(3.1) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 1 & tag != 1, symbol(T) mfcolor(personal) mlcolor(black) msize(3.75) /*
+*/ mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 2 & tag != 1, symbol(T) mfcolor(2) mlcolor(black) msize(3.75) mlwidth(vthin)) (scatter _e _at if /*
+*/ _m == 4 & _etype ==  2 & _pc == 3 & tag != 1, symbol(T) mfcolor(3) mlcolor(black) msize(3.75) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 4 & /*
+*/ tag != 1, symbol(T) mfcolor(4) mlcolor(black) msize(3.75) mlwidth(vthin)), legend(off)  /*
 
-*/ (line _e _at if _m == 4 & _etype ==  2 & _pc == 1, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype ==  2 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /*
+*/ subtitle("With peace years smoothed", box bexpand fcolor(none) pos(6) size(7.5pt) alignment(bottom))  yline(0) xtitle("S.D. units of CINC(ln) smoothed ", size(7.5pt))  /*
+*/xlabel(-2(1)2, tlcolor(black) labsize(7.5pt) nogextend) ytitle(" ") ylabel(-100(50) 100, nolabel noticks nogextend) xscale(lstyle(none) titlegap(-1) alt) /*
+yscale(lstyle(none)) plotregion(lcolor(black) margin(t=4.625 r=2.8)) graphregion(margin(t=1.15 b=-4 l=-6.5 r=-2)) name(t, replace)
 
-*/ (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 1 & tag != 1, symbol(O) mfcolor(personal) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 2 & tag != 1, symbol(O) mfcolor(2) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 3 & tag != 1, symbol(O) mfcolor(3) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 4 & tag != 1, symbol(O) mfcolor(4) mlcolor(black) msize(3.45) mlwidth(vthin)) /*
+*** Combine graphs
+grc1leg2 not t, rows(1) ysize(3) xsize(7.5) imargin(l=-4 r=-2.25) graphregion(margin(l=3.5 b=0 t=-2.5)) legendfrom(not) 
+*| Add Wald chi-squared statistics
+local wald1: di %4.3f scalar(wald1)
+local wald2: di %4.3f scalar(wald2)
+addplot 1:(scatter _e _at if tag == 10, text(-83.5 -1 "{stSerif:Wald {it:{&chi}}{super:2}({it:{&beta}}1{it:{&chi}{subscript:it}} = {it:{&beta}}1{it:{&chi}} /*
+*/ `=ustrunescape("\u0305")'{it:{sub:i}}) = `wald1'}", size(medlarge))), norescaling legend(off) /*
+*/ addplot 2:(scatter _e _at if tag == 10, text(-85 -1 "{stSerif:Wald {it:{&chi}}{super:2}({it:{&beta}}1{it:{&chi}{subscript:it}} = {it:{&beta}}1{it:{&chi}} /*
+*/ `=ustrunescape("\u0305")'{it:{sub:i}}) = `wald2'}", size(medlarge))), norescaling legend(off)
 
-*/ (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 1 & tag != 1,symbol(S) mfcolor(personal) mlcolor(black) msize(3.1) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 2 & tag != 1,symbol(S) mfcolor(2) mlcolor(black) msize(3.1) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 3 & tag != 1,symbol(S) mfcolor(3) mlcolor(black) msize(3.1) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  1 & _pc == 4 & tag != 1,symbol(S) mfcolor(4) mlcolor(black) msize(3.1) mlwidth(vthin)) /*
-
-*/ (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 1 & tag != 1, symbol(T) mfcolor(personal) mlcolor(black) msize(3.75) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 2 & tag != 1, symbol(T) mfcolor(2) mlcolor(black) msize(3.75) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 3 & tag != 1, symbol(T) mfcolor(3) mlcolor(black) msize(3.75) mlwidth(vthin)) (scatter _e _at if _m == 4 & _etype ==  2 & _pc == 4 & tag != 1, symbol(T) mfcolor(4) mlcolor(black) msize(3.75) mlwidth(vthin)), legend(off)  /*
 
 
-*/ subtitle("With peace years smoothed", box bexpand fcolor(none) pos(6) size(7.5pt) alignment(bottom))  yline(0) xtitle("S.D. units of CINC(ln) smoothed ", size(7.5pt)) xlabel(-2(1)2, tlcolor(black) labsize(7.5pt) nogextend) ytitle(" ") ylabel(-100(50) 100, nolabel noticks nogextend) xscale(lstyle(none) titlegap(-1) alt) yscale(lstyle(none)) plotregion(lcolor(black) margin(t=4.625 r=2.8)) graphregion(margin(t=1.15 b=-4 l=-6.5 r=-2)) name(t, replace)
 
-
-grc1leg2 not t, rows(1) ysize(3) xsize(7.5) imargin(l=-4 r=-2.25) graphregion(margin(l=3.5 b=0 t=-2.5)) legendfrom(not) note("{it:Note}. Plot of the within, random and between effects of status deficit on the probability of initiating an MID for models which exclude versus include a smoothed function of peace years. Estimates represent discrete percentage effect from the mean," "fixing CINC(ln) smoothed at incremental values of .5 S.D. while switching status deficit from 0 to 1 (and allowing peace years smoothed to vary). Random effect estimates - represented by circular markers - are drawn from standard RE models with status" "deficit, CINC(ln) smoothed and an interaction term between these effects. Estimates of the within and between effects - represented by square and triangular markers respectively - are drawn from REWB models with separate within and between" "estimates for status deficit and CINC(ln) smoothed - plus a cross-level interaction between the within-effect of status deficit and the between-effect of CINC(ln) smoothed. Estimates from models which include peace years smoothed - an orthogonalised" "cubic spline of 4 knots - are plotted in the right-side panel. Both RE and REWB models estimate the random effect of peace years smoothed. {it:p}-values from a Wald {it:{&chi}}{super:2} test of equality of REWB status deficit coefficients are reported in each panel.", size(4.75pt))  name(gc, replace)
+note("{it:Note}. Plot of the within, random and between effects of status deficit on the probability of initiating an MID for models which exclude versus include a smoothed function of peace years. Estimates represent discrete percentage effect from the mean," "fixing CINC(ln) smoothed at incremental values of .5 S.D. while switching status deficit from 0 to 1 (and allowing peace years smoothed to vary). Random effect estimates - represented by circular markers - are drawn from standard RE models with status" "deficit, CINC(ln) smoothed and an interaction term between these effects. Estimates of the within and between effects - represented by square and triangular markers respectively - are drawn from REWB models with separate within and between" "estimates for status deficit and CINC(ln) smoothed - plus a cross-level interaction between the within-effect of status deficit and the between-effect of CINC(ln) smoothed. Estimates from models which include peace years smoothed - an orthogonalised" "cubic spline of 4 knots - are plotted in the right-side panel. Both RE and REWB models estimate the random effect of peace years smoothed. {it:p}-values from a Wald {it:{&chi}}{super:2} test of equality of REWB status deficit coefficients are reported in each panel.", size(4.75pt))  name(gc, replace)
 
 /// Reposition note
 gr_edit .note.DragBy 0 -3.47
-
-local wald1: di %4.3f scalar(wald1)
-local wald2: di %4.3f scalar(wald2)
-
-
-addplot 1:(scatter _e _at if tag == 10, text(-83.5 -1 "{stSerif:Wald {it:{&chi}}{super:2}({it:{&beta}}1{it:{&chi}{subscript:it}} = {it:{&beta}}1{it:{&chi}}`=ustrunescape("\u0305")'{it:{sub:i}}) = `wald1'}", size(medlarge))), norescaling legend(off)
-
-addplot 2:(scatter _e _at if tag == 10, text(-85 -1 "{stSerif:Wald {it:{&chi}}{super:2}({it:{&beta}}1{it:{&chi}{subscript:it}} = {it:{&beta}}1{it:{&chi}}`=ustrunescape("\u0305")'{it:{sub:i}}) = `wald2'}", size(medlarge))), norescaling legend(off)
-
-
