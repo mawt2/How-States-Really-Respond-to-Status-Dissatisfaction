@@ -63,83 +63,74 @@ esttab pr1 pr2b pr3 pr4b using ex2.tex, label se star(* 0.05 ** 0.01) scalars("r
 frame copy default rpc
 frame change rpc
 
-*<~> Loop over expected status
+*** Loop over expected status (sub-populations)
 local j 0 
-foreach pc of varlist small_1 middle_1 major_1 world_1 {
-	/// New frame
-    qui frame copy rpc rpchange_`pc'
-	qui frame change rpchange_`pc'
-	// Increments by expected status/model
-	local ++ j
+qui foreach pc of varlist small_1 middle_1 major_1 world_1 {
+     frame copy rpc rpchange_`pc'   // New frame
+     frame change rpchange_`pc'
+	local ++ j *| // Set increment by sub-pop
 	local j2 0
-	*<~> Loop over models
+	*| Loop over models
 	forvalues i = 1/4 {
-		local ++ j2
-		 qui est restore pr`i'
-		/// Matrix to store results
-	    qui mat rpc`i'_`pc' = J(21,3,.)
-        // Estimate margins status deficit with CINC at subpopulation mean (and post to e)
+		local ++ j2   // Set increment by model
+		est restore pr`i'   // Restore model estimates
+	        mat rpc`i'_`pc' = J(21,3,.)   // Matrix to store results
+                *| Predictions for non-spline models
 		if `j2' == 1 | `j2' == 2 {
-            qui margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2)) atmeans post
-			qui est store mar`i'_`pc'
+                    margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2)) atmeans post  
+	            est store mar`i'_`pc'
 		}
-	    // Macros for the subpopulation mean of CINC(ln) smoothed (that is, the value of each knot when the base knot = mean)
+	        *| Predictions for spline models
 		else {
-			qui tempvar avmcaplnk_0
-			qui tempvar absmcaplnk_0
-			qui egen `avmcaplnk_0' = mean(mcaplnk_0) if `pc' == 1
-			qui gen `absmcaplnk_0' = abs(`avmcaplnk_0' - mcaplnk_0)
-			qui sort `absmcaplnk_0'
-			forvalues k = 0/7 {
-				qui local k`k'av = mcaplnk_`k'[1]
-			}
-		    ///	Estimate margins for status deficit with CINC(ln) smoothed at subpopulation mean (and post to e)
-			qui margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2) mcaplnk_0 = `k0av' mcaplnk_1 = `k1av' mcaplnk_2 = `k2av' mcaplnk_3 = `k3av' mcaplnk_4 = `k4av' mcaplnk_5 = `k5av' mcaplnk_6 = `k6av' mcaplnk_7 = `k7av') post
-			qui est store mar`i'_`pc'
+	            tempvar avmcaplnk_0
+		    tempvar absmcaplnk_0
+		    egen `avmcaplnk_0' = mean(mcaplnk_0) if `pc' == 1   // Sub-population mean of CINC/CINC(ln)
+		    gen `absmcaplnk_0' = abs(`avmcaplnk_0' - mcaplnk_0)   // Temp var to hold sub-pop mean
+		    sort `absmcaplnk_0'
+		    forvalues k = 0/7 {
+		        local k`k'av = mcaplnk_`k'[1]   // Macro for knot value at sub-pop mean
+		    }
+		    margins, subpop(if `pc' == 1) vce(unconditional) at(comz=(-2 (.2) 2) mcaplnk_0 = `k0av' mcaplnk_1 = `k1av'/*
+		    */ mcaplnk_2 = `k2av' mcaplnk_3 = `k3av' mcaplnk_4 = `k4av' mcaplnk_5 = `k5av' mcaplnk_6 = `k6av' mcaplnk_7 = `k7av') post
+		    qui est store mar`i'_`pc'
 		}
-		*<~> Loop over margins estimates in increments of .2 sd of status deficit
-        forvalues k = 1/21 {
-			*<~> Loop over estimates (except mean)
+	        *| Loop over margins estimates in .2 sd increnents of status deficit
+                forvalues k = 1/21 {
 		    if `k' != 11 {
-				*<~> Separate loop for first estimate (because coef. name is different to rest)
-		        if `k' == 1 {	
-		            /// Estimate relative percent change from the mean
-			        nlcom (rpc`k':(_b[`k'bn._at]/_b[11._at]-1)*100), post
-			        qui mat rpc`i'_`pc'[`k', 1] = e(b)
-			        qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']
-			        qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']
+		        if `k' == 1 {   // Naming convention different for 1st est
+			        nlcom (rpc`k':(_b[`k'bn._at]/_b[11._at]-1)*100), post   // Calculate % change
+			        qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
+			        qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
+			        qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI
 			        qui est restore mar`i'_`pc'
 			    }
-				*>~< Main estimates loop
-			    else {
-			         nlcom (rpc`k':(_b[`k'._at]/_b[11._at]-1)*100), post
-			         qui mat rpc`i'_`pc'[`k', 1] = e(b)
-			         qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']
-			         qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']	
+			    else {   // Remaining est. (except where status deficit = 0
+			         nlcom (rpc`k':(_b[`k'._at]/_b[11._at]-1)*100), post   // Calculate % change
+			         qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
+			         qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
+			         qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI	
 			         qui est restore mar`i'_`pc'
 			    }
 		    }
-		    /// Store mean estimate as 0 (since percent change is calculated from the mean)
-		    else if `k' == 11 {
-			
-		       qui mat rpc`i'_`pc'[`k', 1] = 0
-			   qui mat rpc`i'_`pc'[`k', 2] = 0
-		       qui mat rpc`i'_`pc'[`k', 3] = 0
+		    else if `k' == 11 {   // Mean est = 0 (since % change calculated from mean)
+		        qui mat rpc`i'_`pc'[`k', 1] = 0
+			qui mat rpc`i'_`pc'[`k', 2] = 0
+		        qui mat rpc`i'_`pc'[`k', 3] = 0
 	        }
         }	    
 	    
-        /// Save results matrix as dataset	
+        *** Save results matrix as dataset	
         qui preserve
         qui xsvmat rpc`i'_`pc', saving(rpcbase`i'_`pc', replace)
-	    qui use rpcbase`i'_`pc', clear
-	    qui egen _at = fill(-2 (.2) 2)
-	    qui gen pc = `j'
-	    qui gen e_type = `i'
-	    qui rename rpc`i'_`pc'1 rpc_e
-	    qui rename rpc`i'_`pc'2 rpc_lb
-	    qui rename rpc`i'_`pc'3 rpc_ub
-	    qui save rpcbase`i'_`pc', replace
-	    qui restore
+	qui use rpcbase`i'_`pc', clear
+	qui egen _at = fill(-2 (.2) 2)
+	qui gen pc = `j'
+	qui gen e_type = `i'
+	qui rename rpc`i'_`pc'1 rpc_e
+	qui rename rpc`i'_`pc'2 rpc_lb
+	qui rename rpc`i'_`pc'3 rpc_ub
+	qui save rpcbase`i'_`pc', replace
+	qui restore
     } 
 	
  	/// Append results from each model
