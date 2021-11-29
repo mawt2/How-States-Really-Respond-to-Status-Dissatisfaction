@@ -554,7 +554,7 @@ twoway (line _e _at if _m == 3 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern
 
 */ subtitle("With peace years smoothed", box bexpand fcolor(none) pos(6) size(7.5pt) alignment(bottom))  yline(0) xtitle("S.D. units of CINC(ln) smoothed ", size(7.5pt))  /*
 */xlabel(-2(1)2, tlcolor(black) labsize(7.5pt) nogextend) ytitle(" ") ylabel(-100(50) 100, nolabel noticks nogextend) xscale(lstyle(none) titlegap(-1) alt) /*
-yscale(lstyle(none)) plotregion(lcolor(black) margin(t=4.625 r=2.8)) graphregion(margin(t=1.15 b=-4 l=-6.5 r=-2)) name(t, replace)
+*/ yscale(lstyle(none)) plotregion(lcolor(black) margin(t=4.625 r=2.8)) graphregion(margin(t=1.15 b=-4 l=-6.5 r=-2)) name(t, replace)
 
 *** Combine graphs
 grc1leg2 not t, rows(1) ysize(3) xsize(7.5) imargin(l=-4 r=-2.25) graphregion(margin(l=3.5 b=0 t=-2.5)) legendfrom(not) 
