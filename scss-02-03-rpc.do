@@ -97,14 +97,14 @@ qui foreach pc of varlist small_1 middle_1 major_1 world_1 {
 	 *| Loop over margins estimates in .2 sd increnents of status deficit
          forvalues k = 1/21 {
              if `k' != 11 {
-                 if `k' == 1 {   // Naming convention different for 1st est
+                 if `k' == 1 {   // 1st est. (due to different var suffix)
 	             nlcom (rpc`k':(_b[`k'bn._at]/_b[11._at]-1)*100), post   // Calculate % change
 		     qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
 	             qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
 	             qui mat rpc`i'_`pc'[`k', 3] = e(b) + invnorm(.975) * _se[rpc`k']   // Store ubCI
 		     qui est restore mar`i'_`pc'
 	         }
-	         else {   // Remaining est. (except where status deficit = 0
+	         else {   // Remaining est. (except where status deficit = 0)
 	             nlcom (rpc`k':(_b[`k'._at]/_b[11._at]-1)*100), post   // Calculate % change
 		     qui mat rpc`i'_`pc'[`k', 1] = e(b)   // Store est.
 		     qui mat rpc`i'_`pc'[`k', 2] = e(b) - invnorm(.975) * _se[rpc`k']   // Store lbCI
@@ -112,7 +112,7 @@ qui foreach pc of varlist small_1 middle_1 major_1 world_1 {
 		     qui est restore mar`i'_`pc'
 		 }
 	     }
-             else if `k' == 11 {   // Mean est = 0 (since % change calculated from mean)
+             else if `k' == 11 {   // Mean est = 0 (since % change calculated from 0)
 		 qui mat rpc`i'_`pc'[`k', 1] = 0
 		 qui mat rpc`i'_`pc'[`k', 2] = 0
 		 qui mat rpc`i'_`pc'[`k', 3] = 0
