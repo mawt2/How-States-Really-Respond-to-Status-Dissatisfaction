@@ -539,7 +539,7 @@ twoway (line _e _at if _m == 3 & _etype ==  1 & _pc == 1, lwidth(vthin) lpattern
 */ _m == 4 & _etype ==  1 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype ==  1 & _pc == 3, lwidth(vthin) lpattern(solid) /*
 */ lcolor(black)) (line _e _at if _m == 4 & _etype ==  1 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 1, /*
 */ lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 2, lwidth(vthin) lpattern(solid) lcolor(black))(line _e _at if _m == 4 & _etype/*
-==  2 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /*
+*/ ==  2 & _pc == 3, lwidth(vthin) lpattern(solid) lcolor(black)) (line _e _at if _m == 4 & _etype ==  2 & _pc == 4, lwidth(vthin) lpattern(solid) lcolor(black)) /*
 
 */ (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 1 & tag != 1, symbol(O) mfcolor(personal) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & /*
 */ _etype ==  1 & _pc == 2 & tag != 1, symbol(O) mfcolor(2) mlcolor(black) msize(3.45) mlwidth(vthin)) (scatter _e _at if _m == 3 & _etype ==  1 & _pc == 3 & tag != 1, /* 
