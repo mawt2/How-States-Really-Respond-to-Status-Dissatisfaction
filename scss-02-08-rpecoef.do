@@ -483,70 +483,65 @@ foreach pc in `sample' {
 		}
 	}
 								
-	* Generate Jacobian matrix for partial derivative of  logit predictions
+	*** Generate Jacobian matrix for partial derivative of  logit predictions
 	*| Enables creation of VCV matrix for calculation of RR confidence intervals
-	local rowno = `colno' // Number of matrix cols. = no. predictions
-	mat J = J(`rowno',`paramno',.)  // Create matrix
-	local cnames_j: colnames e(V) // Macro for matrix col. names
-	mat colnames J = `cnames_j' // Name matrix cols.
+	local rowno = `colno'   // Number of matrix cols. = no. predictions
+	mat J = J(`rowno',`paramno',.)   // Create matrix
+	local cnames_j: colnames e(V)  // Macro for matrix col. names
+	mat colnames J = `cnames_j'  // Name matrix cols.
 	local levs ng g // Macro for prediction type
-	local k 0 // Increment
-	foreach l in `levs' { // Loop over no-gains/gains predictions
+	local k 0   // Increment
+	foreach l in `levs' {   // Loop over no-gains/gains predictions
 	    local ++ k // Start increment
-	    forvalues i = 1/`paramno' { // Loop over model paramters
-		    capture confirm var dm`l'_`i'  // Mean prediction
-			if c(rc) == 111 { 
-                continue // Skip the following if deriv. is missing
-			}
-			else { // If deriv. is non-missing do the following
-			    if `k' == 1 { // No-gains loop
-			        mat J[1,`i'] = dm`l'_`i'[1] // Deriv. for t=5
-					mat J[7,`i'] = dm`l'_`i'[2] // Deriv. for t=10
-			    }
-				else if `k' == 2 { // Gains loop
-					mat J[13,`i'] = dm`l'_`i'[1] // Deriv. for t=5
-					mat J[19,`i'] = dm`l'_`i'[2] // Deriv. for t=10
-				}
-			}
+	    forvalues i = 1/`paramno' {   // Loop over model paramters
+		capture confirm var dm`l'_`i'   // Mean prediction
+	        if c(rc) == 111 { 
+                    continue   // Skip the following if deriv. is missing
 		}
-	}
-	local k 0 // Increment
-	foreach l in `levs' {  // Loop over no-gains/gains predictions
-		local ++ k // Start increment
-		forvalues j = 1/5 { // Loop over main effects
-			forvalues i = 1/`paramno' { // Loop over model paramters	
-				capture confirm var dp`l'_`j'_`i' // +1 S.D. prediction
-				if c(rc) == 111 { 
-				    continue // Skip the following if deriv. is missing
-			    }
-				else {  // If deriv. is non-missing do the following
-					if `k' == 1 { // No-gains loop
-						local jp1 = `j' + 1 // Macro for matrix row no.
-						mat J[`jp1',`i'] = dp`l'_`j'_`i'[1] // Deriv. for t=5
-						local jp2 = `j' + 7 // Macro for matrix row no.
-						mat J[`jp2',`i'] = dp`l'_`j'_`i'[2] // Deriv. for t=10
-					}
-					else if `k' == 2 { // Gains loop
-						local jp3 = `j' + 13 // Macro for matrix row no.
-						mat J[`jp3',`i'] = dp`l'_`j'_`i'[1] // Deriv. for t=5
-						local jp4 = `j' + 19 // Macro for matrix row no.
-						mat J[`jp4',`i'] = dp`l'_`j'_`i'[2] // Deriv. for t=10
-					}
-				}
-			}
+		else {   // If deriv. is non-missing do the following
+		    if `k' == 1 {   // No-gains loop
+			mat J[1,`i'] = dm`l'_`i'[1]   // Deriv. for t=5
+			mat J[7,`i'] = dm`l'_`i'[2]   // Deriv. for t=10
+		    }
+		    else if `k' == 2 {   // Gains loop
+		        mat J[13,`i'] = dm`l'_`i'[1]   // Deriv. for t=5
+			mat J[19,`i'] = dm`l'_`i'[2]   // Deriv. for t=10
+		    }
 		}
+	    }
+	    forvalues j = 1/5 { // Loop over main effects (status deficit + controls
+                forvalues i = 1/`paramno' { // Loop over model paramters	
+		    capture confirm var dp`l'_`j'_`i' // +1 S.D. prediction
+		    if c(rc) == 111 { 
+		        continue // Skip the following if deriv. is missing
+		    }
+		    else {  // If deriv. is non-missing do the following
+		        if `k' == 1 { // No-gains loop
+			    local jp1 = `j' + 1 // Macro for matrix row no.
+			    mat J[`jp1',`i'] = dp`l'_`j'_`i'[1] // Deriv. for t=5
+		            local jp2 = `j' + 7 // Macro for matrix row no.
+		            mat J[`jp2',`i'] = dp`l'_`j'_`i'[2] // Deriv. for t=10
+			}
+			else if `k' == 2 { // Gains loop
+			    local jp3 = `j' + 13 // Macro for matrix row no.
+			    mat J[`jp3',`i'] = dp`l'_`j'_`i'[1] // Deriv. for t=5
+			    local jp4 = `j' + 19 // Macro for matrix row no.
+			    mat J[`jp4',`i'] = dp`l'_`j'_`i'[2] // Deriv. for t=10
+		        }
+		    }
+		}
+	    }
 	}
 	
 	forvalues i = 1/`rowno' { // Loop over predictions 
-        forvalues j = 1/`paramno' { // Loop over parameters
-            if missing(J[`i', `j']) { // If deriv. is missing
-            matrix J[`i', `j'] = 0 // Deriv. = 0
+            forvalues j = 1/`paramno' { // Loop over parameters
+                if missing(J[`i', `j']) { // If deriv. is missing
+                    matrix J[`i', `j'] = 0 // Deriv. = 0
+                }
             }
-        }
-    }
+        }			
 	
-				
-	/// Generate variance-covariance matrix
+	*** Generate variance-covariance matrix
 	mat V = J*e(V)*J'
 	
 	/// Macros for results matrix row/column names (using abb macro, loop over t5/10)
