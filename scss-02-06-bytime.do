@@ -133,7 +133,7 @@ foreach pc in `sample' {
 	
 	*** Loop for discrete change in status deficit
 	local f 0
-	forvalues p = 0/1 {
+	qui forvalues p = 0/1 {
         local ++ f
 	    if `f' != 1 {
 	    *| Re-generate within/between status deficit components at + 1. S.D. 
@@ -141,36 +141,36 @@ foreach pc in `sample' {
 	    *| NOTE. 1st ob only bc. if all obs = 1, then within effect (cluster deviation) = 0
 	        qui replace defz = `p' if `obno' == 1
 	        *| Re-generate within/between components at +1 S.D. (for 1st ob.)
-	        qui by ddyadid: center defz , prefix(W2_) mean(B2_)
+	        by ddyadid: center defz , prefix(W2_) mean(B2_)
 		*| Update within/between components at +1 S.D. values (for 1st ob.)
-		qui replace W_defz = W2_defz[1] // within = +1 S.D. 
-		qui replace B_defz = B2_defz[1] // between = mean (0)
+		replace W_defz = W2_defz[1] // within = +1 S.D. 
+		replace B_defz = B2_defz[1] // between = mean (0)
 	     }
-	     *| Update within-deficitXbetween-CINC(ln) interaction 
+	     *| Update within-deficitXbetween-CINC(ln) smoothed interaction 
 		forvalues k = 0/7 {
-			*| For status deficit = 0, use base variable (W_defz where within effect = 0)
-			if `f' == 1 {
-				qui gen double W2_defXB_mcaplnk_`k' = W_defz*B_mcaplnk_`k'
+		    *| For status deficit = 0, use base variable (W_defz where within effect = 0)
+		        if `f' == 1 {
+			    gen double W2_defXB_mcaplnk_`k' = W_defz*B_mcaplnk_`k'
 			}
 			*| For status deficit = 1, use re-generated variable (W2_defz where within effect for 1st ob. = 1)
 			else {
-				qui gen double W2_defXB_mcaplnk_`k' = W2_defz*B_mcaplnk_`k'
+			    gen double W2_defXB_mcaplnk_`k' = W2_defz*B_mcaplnk_`k'
 			}
 			*| Update within and between components of interaction
 			*| NOTE. Standard multiplicativive interaction Xit*Xi(hat) is not valid!!!!!!!!!!!!!!
 			*| Correct specification = XitXi(hat)it*XitXi(hat)(HAT)
-			qui by ddyadid: center W2_defXB_mcaplnk_`k', prefix(W2_) mean(B2_)
-		        qui su W2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
-		        qui replace W_W_defXB_mcaplnk_`k' = r(mean)
-		        qui su B2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
-	                qui replace B_W_defXB_mcaplnk_`k' = r(mean)
-			*| Update 3-way interaction 
+			by ddyadid: center W2_defXB_mcaplnk_`k', prefix(W2_) mean(B2_)
+		        su W2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
+		        replace W_W_defXB_mcaplnk_`k' = r(mean)
+		        su B2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
+	                replace B_W_defXB_mcaplnk_`k' = r(mean)
+			*| Update 3-way interaction (within-deficitXbetween-CINC(ln) smoothedXpeace years
 			forvalues k2 = 1/4 {
-				qui replace W_W_defXB_mcaplnk_`k'Xpyk_`k2' = W_W_defXB_mcaplnk_`k'*pceyrsk_`k2'
-		        qui replace B_W_defXB_mcaplnk_`k'Xpyk_`k2' = B_W_defXB_mcaplnk_`k'*pceyrsk_`k2'
+		            replace W_W_defXB_mcaplnk_`k'Xpyk_`k2' = W_W_defXB_mcaplnk_`k'*pceyrsk_`k2'
+		            replace B_W_defXB_mcaplnk_`k'Xpyk_`k2' = B_W_defXB_mcaplnk_`k'*pceyrsk_`k2'
 			}
-		}
-	    /// Generate predictions with partial derivatives
+		    }
+	        *| Generate predictions with partial derivatives
 		if `f' == 1 {
             qui predictnl double prm = predict(pr), g(dm_)
 		}
