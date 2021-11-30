@@ -513,7 +513,48 @@ program define bytimeg2plus
     local tobs = _N
     forvalues i = 1/`tobs'{
         preserve
-    ################# INSERT ESTIMATION SCRIPT FROM Figure 1.4.3 ######################		
+    local tobs = _N
+			local tobst = `tobs'/500
+		    forvalues i = 1/`tobst'{
+				
+				
+				*| Set restoration point
+				preserve
+				 
+				 *|>*< Loop over CINC(ln) splines
+		        forvalues k = 0/7 {
+					*| Reset variable at ob`i's in-sample value 
+				    qui replace W_mcaplnk_`k' = W_mcaplnk_`k'[`i'] 
+					qui replace B_mcaplnk_`k' = B_mcaplnk_`k'[`i'] 
+					*| Update cross-level interaction for 1st ob using ob`i's
+					*|in-sample value
+				    qui gen double W2_defXB_mcaplnk_`k' = W2_defz*B_mcaplnk_`k'
+					qui by ddyadid: center W2_defXB_mcaplnk_`k', prefix(W2_) mean(B2_)
+		            qui su W2_W2_defXB_mcaplnk_`k' if obno1 == 1, meanonly
+		            qui replace W_W_defXB_mcaplnk_`k' = r(mean) 
+		            qui su B2_W2_defXB_mcaplnk_`k' if obno1 == 1, meanonly
+	                qui replace B_W_defXB_mcaplnk_`k' = r(mean) 
+			    }
+				
+
+				*| >~< Loop over peace years splines
+		        forvalues k = 1/4 {
+					*| Reset variable at ob`i's in-sample value
+					qui replace pceyrsk_`k' = pceyrsk_`k'[`i'] 
+					forvalues k2 = 0/7 {
+						qui replace W_W_defXB_mcaplnk_`k2'Xpyk_`k' = W_W_defXB_mcaplnk_`k2'*pceyrsk_`k'
+						qui replace B_W_defXB_mcaplnk_`k2'Xpyk_`k' = B_W_defXB_mcaplnk_`k2'*pceyrsk_`k'
+					}
+				}
+				
+				*| Update core within/between component 
+				*| on ob.1's deviation value
+	            qui replace W_defz = W2_defz[`ob1pos'] 
+		        qui replace B_defz = B2_defz[`ob1pos'] 
+				
+				/// Gains interaction
+				replace W_defXstg = W_defz*stsgain
+					
         *| Generate predictions
 	qui predict double pr`i', pr
 	*| Post prediction and ob. identifiers to tempfile
