@@ -157,8 +157,8 @@ foreach pc in `sample' {
 			    gen double W2_defXB_mcaplnk_`k' = W2_defz*B_mcaplnk_`k'
 			}
 			*| Update within and between components of interaction
-			*| NOTE. Standard multiplicativive interaction Xit*Xi(hat) is not valid!!!!!!!!!!!!!!
-			*| Correct specification = XitXi(hat)it*XitXi(hat)i(HAT)
+			*| NOTE. Standard multiplicativive interaction Xit*Zi(hat) is not valid!!!!!!!!!!!!!!
+			*| Correct specification = XitZi(hat)it*XitZi(hat)i(hat)
 			by ddyadid: center W2_defXB_mcaplnk_`k', prefix(W2_) mean(B2_)
 		        su W2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
 		        replace W_W_defXB_mcaplnk_`k' = r(mean)
