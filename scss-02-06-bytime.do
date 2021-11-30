@@ -131,39 +131,40 @@ foreach pc in `sample' {
 	qui sort ddyadid year
 	qui gen `obno' = _n 
 	
-	*>~< Loop for discrete change in status deficit 
+	*** Loop for discrete change in status deficit
 	local f 0
 	forvalues p = 0/1 {
-        local ++ f			 	
-		*>~< Reset status deficit from 0/1 for discrete change 
-		if `f' != 1 { 
-			*| Re-generate within/between status deficit components at + 1. S.D. 
-			*| for 1st ob. only so as to preserve within-country variation
-			*| NOTE. 1st ob only bc. if all obs = 1, then within effect = 0
-			qui replace defz = `p' if `obno' == 1
-	        *| Re-generate within/between components at +1 S.D.
+        local ++ f
+	    if `f' != 1 {
+	    *| Re-generate within/between status deficit components at + 1. S.D. 
+            *| for 1st ob. only so as to preserve within-country variation
+	    *| NOTE. 1st ob only bc. if all obs = 1, then within effect (cluster deviation) = 0
+	        qui replace defz = `p' if `obno' == 1
+	        *| Re-generate within/between components at +1 S.D. (for 1st ob.)
 	        qui by ddyadid: center defz , prefix(W2_) mean(B2_)
-		    *| Update core within/between components 
-			qui replace W_defz = W2_defz[1] // within = +1 S.D. 
-		    qui replace B_defz = B2_defz[1] // between = mean (0)
-		}
-	    *>~< Update within-deficitXbetween-CINC(ln) interaction 
+		*| Update within/between components at +1 S.D. values (for 1st ob.)
+		qui replace W_defz = W2_defz[1] // within = +1 S.D. 
+		qui replace B_defz = B2_defz[1] // between = mean (0)
+	     }
+	     *| Update within-deficitXbetween-CINC(ln) interaction 
 		forvalues k = 0/7 {
-			*| If status deficit = 0 use base variable (W_defz)
+			*| For status deficit = 0, use base variable (W_defz where within effect = 0)
 			if `f' == 1 {
 				qui gen double W2_defXB_mcaplnk_`k' = W_defz*B_mcaplnk_`k'
 			}
-			*| If status deficit = 1 use re-generated variable (W2_defz)
+			*| For status deficit = 1, use re-generated variable (W2_defz where within effect for 1st ob. = 1)
 			else {
 				qui gen double W2_defXB_mcaplnk_`k' = W2_defz*B_mcaplnk_`k'
 			}
-			*| Center to generate within and between components of interaction
+			*| Update within and between components of interaction
+			*| NOTE. Standard multiplicativive interaction Xit*Xi(hat) is not valid!!!!!!!!!!!!!!
+			*| Correct specification = XitXi(hat)it*XitXi(hat)(HAT)
 			qui by ddyadid: center W2_defXB_mcaplnk_`k', prefix(W2_) mean(B2_)
-		    qui su W2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
-		    qui replace W_W_defXB_mcaplnk_`k' = r(mean)
-		    qui su B2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
-	        qui replace B_W_defXB_mcaplnk_`k' = r(mean)
-			*>~< Re-generate 3-way interaction 
+		        qui su W2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
+		        qui replace W_W_defXB_mcaplnk_`k' = r(mean)
+		        qui su B2_W2_defXB_mcaplnk_`k' if `obno' == 1, meanonly
+	                qui replace B_W_defXB_mcaplnk_`k' = r(mean)
+			*| Update 3-way interaction 
 			forvalues k2 = 1/4 {
 				qui replace W_W_defXB_mcaplnk_`k'Xpyk_`k2' = W_W_defXB_mcaplnk_`k'*pceyrsk_`k2'
 		        qui replace B_W_defXB_mcaplnk_`k'Xpyk_`k2' = B_W_defXB_mcaplnk_`k'*pceyrsk_`k2'
