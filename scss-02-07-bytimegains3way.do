@@ -483,98 +483,50 @@ foreach pc in `sample' {
 }
 
 
-*Estimation of in-sample effects
-***********************************************************
-parallel initialize 4, force s("C:\Program Files\Stata17\StataBE-64.exe")
-/// Program for estimation in-sample effect at +1 S.D.
+**** Set stata to run across 6 cores
+parallel initialize 6, force s("C:\Program Files\Stata17\StataBE-64.exe") // Set Stata to run across 6 cores
+*** Program for multi-core computation of in-sample predictions
 capture program drop bytimeg2plus
 program define bytimeg2plus
-syntax varlist
-
-*| Sort by dyad sample size (to ensure computation of within effect on full 52 year sample)	
-tempname dyobs		
-qui bysort ddyadid: gen `dyobs' = _N
-qui gsort - `dyobs' +ddyadid + year
-
-*| Tag 1st ob. (full sample dyad)
-gen obno1 = _n			
-
-*| Set status deficit at +1 S.D. for 1st ob. only 
-qui replace defz = 1 if obno1 == 1
-
-*| Macro for 1st ob. position when re-sorted by dyad-year
-sort ddyadid year	
-tempname neworder
-gen `neworder' = _n
-su `neworder' if obno1 == 1
-local ob1pos = r(mean)
-
-*| Re-generate within status deficit components at + 1 S.D. (for 1st ob)
-qui by ddyadid: center defz , prefix(W2_) mean(B2_)
-           
-*| Temp file to post estimation results via loop
-			estimates use prs
-			tempname plus
-			postfile `plus' ddyadid year _prp pceyrs using rpe_bytimeg2_plus_`varlist', replace
-			
-			*|>~< Loop over each ob. in subpopulation sample
-			local tobs = _N
-			local tobst = `tobs'/500
-		    forvalues i = 1/`tobst'{
-				
-				
-				*| Set restoration point
-				preserve
-				 
-				 *|>*< Loop over CINC(ln) splines
-		        forvalues k = 0/7 {
-					*| Reset variable at ob`i's in-sample value 
-				    qui replace W_mcaplnk_`k' = W_mcaplnk_`k'[`i'] 
-					qui replace B_mcaplnk_`k' = B_mcaplnk_`k'[`i'] 
-					*| Update cross-level interaction for 1st ob using ob`i's
-					*|in-sample value
-				    qui gen double W2_defXB_mcaplnk_`k' = W2_defz*B_mcaplnk_`k'
-					qui by ddyadid: center W2_defXB_mcaplnk_`k', prefix(W2_) mean(B2_)
-		            qui su W2_W2_defXB_mcaplnk_`k' if obno1 == 1, meanonly
-		            qui replace W_W_defXB_mcaplnk_`k' = r(mean) 
-		            qui su B2_W2_defXB_mcaplnk_`k' if obno1 == 1, meanonly
-	                qui replace B_W_defXB_mcaplnk_`k' = r(mean) 
-			    }
-				
-
-				*| >~< Loop over peace years splines
-		        forvalues k = 1/4 {
-					*| Reset variable at ob`i's in-sample value
-					qui replace pceyrsk_`k' = pceyrsk_`k'[`i'] 
-					forvalues k2 = 0/7 {
-						qui replace W_W_defXB_mcaplnk_`k2'Xpyk_`k' = W_W_defXB_mcaplnk_`k2'*pceyrsk_`k'
-						qui replace B_W_defXB_mcaplnk_`k2'Xpyk_`k' = B_W_defXB_mcaplnk_`k2'*pceyrsk_`k'
-					}
-				}
-				
-				*| Update core within/between component 
-				*| on ob.1's deviation value
-	            qui replace W_defz = W2_defz[`ob1pos'] 
-		        qui replace B_defz = B2_defz[`ob1pos'] 
-				
-				/// Gains interaction
-				replace W_defXstg = W_defz*stsgain
-			
-	            *| Generate predictions
-			    qui predict double pr`i', pr
-				
-				*| Post prediction and ob. identifiers to tempfile
-				local ddyadid = ddyadid[`i']
-				local year = year[`i']
-				local _prp = pr`i'[`ob1pos']
-				local pceyrs = pceyrs[`i']	
-				post `plus' (`ddyadid') (`year') (`_prp') (`pceyrs') 
-			    restore
-			}
-			
-			*| Save tempfile
-			postclose `plus'
-		    end
+    syntax varlist
+    *| Sort by dyad sample size (to ensure computation of within effect on full 52 year sample)	
+    tempname dyobs		
+    bysort ddyadid: gen `dyobs' = _N
+    gsort - `dyobs' +ddyadid + year
+    *| Tag 1st ob. (always full sample dyad)
+    gen obno1 = _n			
+    *| Set status deficit at +1 S.D. for 1st ob. only 
+    qui replace defz = 1 if obno1 == 1
+    *| Macro for 1st ob. position when re-sorted by dyad-year
+    sort ddyadid year	
+    tempname neworder
+    gen `neworder' = _n
+    su `neworder' if obno1 == 1, meanonly
+    local ob1pos = r(mean)
+    *| Re-generate within status deficit components at + 1 S.D. (for 1st ob)
+    by ddyadid: center defz , prefix(W2_) mean(B2_) 
+    *| Temp file to post estimation results 
+    estimates use prs
+    tempname plus
+    postfile `plus' ddyadid year _prp pceyrs using rpe_bytimeg2_plus_`varlist', replace
+    *| Loop over each ob. 
+    local tobs = _N
+    forvalues i = 1/`tobs'{
+        preserve
+    ################# INSERT ESTIMATION SCRIPT FROM Figure 1.4.3 ######################		
+        *| Generate predictions
+	qui predict double pr`i', pr
+	*| Post prediction and ob. identifiers to tempfile
+        local ddyadid = ddyadid[`i']
+	local year = year[`i']
+        local _prp = pr`i'[`ob1pos']
+        local pceyrs = pceyrs[`i']	
+	post `plus' (`ddyadid') (`year') (`_prp') (`pceyrs') 
+	restore
+    }
+    *| Save tempfile
+    postclose `plus'
+end
 
 
 
