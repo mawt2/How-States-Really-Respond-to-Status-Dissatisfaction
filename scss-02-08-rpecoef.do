@@ -509,34 +509,34 @@ foreach pc in `sample' {
 		    }
 		}
 	    }
-	    forvalues j = 1/5 { // Loop over main effects (status deficit + controls
-                forvalues i = 1/`paramno' { // Loop over model paramters	
-		    capture confirm var dp`l'_`j'_`i' // +1 S.D. prediction
+	    forvalues j = 1/5 {   // Loop over main effects (status deficit + controls
+                forvalues i = 1/`paramno' {   // Loop over model paramters	
+		    capture confirm var dp`l'_`j'_`i'   // +1 S.D. prediction
 		    if c(rc) == 111 { 
-		        continue // Skip the following if deriv. is missing
+		        continue   // Skip the following if deriv. is missing
 		    }
-		    else {  // If deriv. is non-missing do the following
-		        if `k' == 1 { // No-gains loop
-			    local jp1 = `j' + 1 // Macro for matrix row no.
-			    mat J[`jp1',`i'] = dp`l'_`j'_`i'[1] // Deriv. for t=5
+		    else {   // Where deriv. is non-missing do the following
+		        if `k' == 1 {   // Where gains = 0
+			    local jp1 = `j' + 1   // Macro for matrix row no.
+			    mat J[`jp1',`i'] = dp`l'_`j'_`i'[1]   // Deriv. for t=5
 		            local jp2 = `j' + 7 // Macro for matrix row no.
-		            mat J[`jp2',`i'] = dp`l'_`j'_`i'[2] // Deriv. for t=10
+		            mat J[`jp2',`i'] = dp`l'_`j'_`i'[2]   // Deriv. for t=10
 			}
-			else if `k' == 2 { // Gains loop
-			    local jp3 = `j' + 13 // Macro for matrix row no.
-			    mat J[`jp3',`i'] = dp`l'_`j'_`i'[1] // Deriv. for t=5
+			else if `k' == 2 {   // Where gains = 1
+			    local jp3 = `j' + 13   // Macro for matrix row no.
+			    mat J[`jp3',`i'] = dp`l'_`j'_`i'[1]   // Deriv. for t=5
 			    local jp4 = `j' + 19 // Macro for matrix row no.
-			    mat J[`jp4',`i'] = dp`l'_`j'_`i'[2] // Deriv. for t=10
+			    mat J[`jp4',`i'] = dp`l'_`j'_`i'[2]   // Deriv. for t=10
 		        }
 		    }
 		}
 	    }
 	}
 	
-	forvalues i = 1/`rowno' { // Loop over predictions 
-            forvalues j = 1/`paramno' { // Loop over parameters
-                if missing(J[`i', `j']) { // If deriv. is missing
-                    matrix J[`i', `j'] = 0 // Deriv. = 0
+	forvalues i = 1/`rowno' {   // Loop over predictions 
+            forvalues j = 1/`paramno' {   // Loop over parameters
+                if missing(J[`i', `j']) {   // Where deriv. is missing
+                    matrix J[`i', `j'] = 0   // Deriv. = 0
                 }
             }
         }			
