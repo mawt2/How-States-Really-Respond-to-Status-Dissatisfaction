@@ -64,73 +64,73 @@ fgen age2 = age^2
 clonevar b_spendC = b_spend
 clonevar prof_spendC = prof_spend
 
-gsem(b_spendC <- age age2 i.pay_type i.atm i.gender, regress) (prof_spendC <- age age2 i.pay_type i.atm i.gender, regress) 
-
-
+*** GSEM for efficient estimation
+gsem(b_spendC <- i.atm  age age2 i.gender i.pay_type i.neighbourhood i.occupation, regress) /*
+*/ (prof_spendC <- i.atm age age2 i.gender i.pay_type i.neighbourhood i.occupation, regress) 
+*** Declare age-squared as nonlinear polynomial
 f_able, nlvar(age2) 
 
-margins,  at(atm=(0 1) pay_type = 1 gender = 1) atmeans numerical nochainrule saving(ccatmmar, replace)
-
-margins, dydx(atm) at(pay_type = 1 gender = 1) atmeans numerical nochainrule
+*** Calculate marginal effect of ATM use on basket spend 
+*| holding convariates at the median
+margins, dydx(atm) at(gender = `med2' pay_type = `med3' neighbourhood = `med4' occupation = `med5') atmeans numerical nochainrule
 scalar eff1 = r(b)[1,3]
 scalar eff2 = r(b)[1,4]
 scalar p1 = r(table)[4,3]
 scalar p2 = r(table)[4,4]
 
-
+*** Set envionment for margins plot
 frame copy default atmmar
 frame change atmmar
 use ccatmmar, clear
-
 keep _margin _ci_lb _ci_ub _at4
-
+*| Increment X-axis age values to prevent overlap of CI lines in plot
 forvalues i = 1/4 {
-	
 	if `i' < 3 {
-		
 		replace _at4 = _at4 -.01 if _n == `i'
-		
 	}
-	
 	else {
-		
 		replace _at4 = _at4  +.01 if _n == `i'
 	}
 }
-gen t = 1 if _n < 3
-replace t = 2 if t == .
-
-
+*| Variable to denote basket type
+gen m = 1 if _n < 3
+replace m = 2 if m == .
+*| Macros for marginal effect + p-value
 local eff1m: di %3.2f eff1
 local eff2m: di %3.2f eff2
 local p1m: di %4.3f p1
 local p2m: di %4.3f p2
 
-twoway (connected _margin _at4 if t == 1, lcolor(gs2) lwidth(medthick) mfcolor(gs2) mlcolor(white) msize(vlarge) mlwidth(medium)) (rcap _ci_lb _ci_ub _at4 if t == 1, color(gs2) lwidth(medthick)) (connected _margin _at4 if t == 2, lcolor(plg2) lwidth(medthick) mfcolor(plg2) mlcolor(white) msize(vlarge) mlwidth(medium)) (rcap _ci_lb _ci_ub _at4 if t == 2, color(plg2) lwidth(medthick)), xlabel(0 "No ATM use" 1"ATM use") xtitle("") ytitle("Average £ spent (adjusted prediction)") text(6 .75 "{bf:Average effect (additional £ spent) = `eff2m'p}", size(small)) text(5.2 .5775 "{it:p} = `p2m'", size(small)) text(14 .23 "{bf:Average effect (additional £ spent) = `eff1m'p}", size(small)) text(13.225 .0575 "{it:p} = `p1m'", size(small)) legend(label(1 "Total basket") label(3 "Profit items") order(1 3) pos(6) rows(1) bmargin(t=-2)) graphregion(margin(t=2 b=1 l=2 r=3))  name(pred, replace)
+*** Marginal effect plot with in-text signposting
+twoway (connected _margin _at4 if m == 1, lcolor(gs2) lwidth(medthick) mfcolor(gs2) mlcolor(white) msize(vlarge) mlwidth(medium)) /* (rcap _ci_lb _ci_ub _at4 if m == 1, /*
+*/ color(gs2) lwidth(medthick)) (connected _margin _at4 if m == 2, lcolor(plg2) lwidth(medthick) mfcolor(plg2) mlcolor(white) msize(vlarge) mlwidth(medium)) /*
+*/ (rcap _ci_lb _ci_ub _at4 if m == 2, color(plg2) lwidth(medthick)),  xlabel(0 "No ATM use" 1"ATM use") xtitle("") ytitle("Average £ spent (adjusted prediction)") ?*
+*/ text(6 .75 "{bf:Average effect (additional £ spent) = `eff2m'p}", size(small)) text(5.2 .5775 "{it:p} = `p2m'", size(small)) /*
+*/ text(14 .23 "{bf:Average effect (additional £ spent) = `eff1m'p}", size(small)) text(13.225 .0575 "{it:p} = `p1m'", size(small)) legend(label(1 "Total basket") /*
+*/ label(3 "Profit items") order(1 3) pos(6) rows(1) bmargin(t=-2)) graphregion(margin(t=2 b=1 l=2 r=3))  name(pred, replace)
 
 
 frame change default
 		
 
-/// f_able program to enable computation of marginal effects of nonlinear variable
+
+*** GSEM for simultaneous estimation of multiple models
+gsem(b_spendC <- age age2 i.gender c.age#i.gender c.age2#i.gender i.pay_type i.atm  i.neighbourhood i.occupation , regress) /*
+*/ (prof_spendC <- age age2 i.gender c.age#i.gender c.age2#i.gender i.pay_type i.atm i.neighbourhood i.occupation , regress) 
+
+*** Declare age-squared as nonlinear polynomial
 f_able, nlvar(age2) 
 
-/// Generalised Structural Equation Model 
-*| Enables simultaneous computation of marginal effects from multiple models
-gsem(b_spendC <- age age2 i.pay_type i.atm i.gender c.age#i.gender c.age2#i.gender, regress) /*
-*/ (prof_spendC <- age age2 i.pay_type i.atm i.gender c.age#i.gender c.age2#i.gender, regress) 
-
-/// Marginal predictions across ages, holding covariates at mean/median
+*** Marginal predictions across ages, holding covariates at mean/median
 *| Computes margins for both basket and profit models under GSEM
-margins, at(age=(10(10)80) gender=(1 2) pay_type = 1) nochainrule numerical saving(cc_agemar)
+margins, at(age=(10(10)80) gender=(1 2) atm = `med1' pay_type = `med3' neighbourhood=`med4' occupation = `med5' ) nochainrule numerical saving(cc_agemar)
 
-/// Clean margins results set
+*** Set envionment for margins plot
 use ccagemar,clear
 gen m = 1 if _n < 17
 replace m = 2 if m == .
 keep _margin _ci_lb _ci_ub _pvalue _at1 _at5 m
-
-/// Increment x-axis age values to prevent overlap of CI lines in plot
+|* Increment X-axis age values to prevent overlap of CI lines in plot
 replace _at1 = _at1 - 4 if m == 1 & _at5 == 1
 replace _at1 = _at1 - 2 if m == 1 & _at5 == 2
 replace _at1 = _at1 + 2 if m == 2 & _at5 == 2
