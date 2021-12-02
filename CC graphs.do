@@ -66,13 +66,14 @@ clonevar prof_spendC = prof_spend
 
 *** GSEM for efficient estimation
 gsem(b_spendC <- i.atm  age age2 i.gender i.pay_type i.neighbourhood i.occupation, regress) /*
-*/ (prof_spendC <- i.atm age age2 i.gender i.pay_type i.neighbourhood i.occupation, regress) 
+*/ (prof_spendC <- i.atm age age2 i.gender i.pay_type i.neighbourhood i.occupation, regress), vce(robust)
+
 *** Declare age-squared as nonlinear polynomial
 f_able, nlvar(age2) 
-
 *** Calculate marginal effect of ATM use on basket spend 
 *| holding convariates at the median
 margins, dydx(atm) at(gender = `med2' pay_type = `med3' neighbourhood = `med4' occupation = `med5') atmeans numerical nochainrule
+
 scalar eff1 = r(b)[1,3]
 scalar eff2 = r(b)[1,4]
 scalar p1 = r(table)[4,3]
